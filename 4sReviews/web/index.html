@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>4s Reviews</title>
+        <script src='js/jquery.js'></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script>//https://api.foursquare.com/v2/venues/categories
+            //https://api.foursquare.com/v2/venues/4a5e00d9f964a520e2bd1fe3/tips?client_id=3TFPJDCOB4NUNEX10RUZAT0EQ5OSQI1A2WZGDLVET2LRVV1I&client_secret=0Y1UEDME1QPXRQICNIHVZGZKSXOLWDMCVLJTPI5ZOXEDTB3I&v=20130815&ll=40.7,-74&query=sushi
+ function addVenues()
+            {
+                
+                $.getJSON("https://api.foursquare.com/v2/venues/search?limit=50&v=20131016&intent=browse&categoryId=4d4b7105d754a06374d81259,4bf58dd8d48988d1c4941735&near=London&client_id=3TFPJDCOB4NUNEX10RUZAT0EQ5OSQI1A2WZGDLVET2LRVV1I&client_secret=0Y1UEDME1QPXRQICNIHVZGZKSXOLWDMCVLJTPI5ZOXEDTB3I",
+		function(json) {
+	        //ip=json.ip;
+                //fulljson=JSON.stringify(json);
+                console.log(json);
+                $.ajax({
+                                type: "POST",       // the dNodeNameefault
+                                url: "main_Controller",
+                                data: { jsonData:JSON.stringify(json), fn:1},
+                                success: function(data){
+                                        
+                                }
+                        }); 
+            }
+	);
+}
+
+    function sortLikes()
+            {
+                
+                $.getJSON("main_Controller?fn=2",
+		function(json) {
+	        //ip=json.ip;
+                //fulljson=JSON.stringify(json);
+                console.log(json);
+                 
+            }
+	);
+}
+
+        function retrieveTips()
+        {
+            $.getJSON("main_Controller?fn=1",
+		function(venue_id_list) {
+                    console.log('venue_id_list',venue_id_list);
+                    for(var i=0;i<venue_id_list.length;i++)
+                    {
+                        var venuid=venue_id_list[i];
+                        console.log(i,venuid);
+                        setTimeout(queryTips(venuid), 10000);
+                        
+                        
+                        
+                    }
+                   
+                });
+        }
+        function getUserDetails()
+        {
+            $.getJSON("main_Controller?fn=3",
+		function(venue_id_list) {
+                    
+                });
+        }
+        function queryTips(venuid)
+        {
+            $.getJSON("https://api.foursquare.com/v2/venues/"+venuid+"/tips?v=20131016&limit=500&client_id=3D1SRRI3EVTRVHPHHBGQ00EOJEX45VWZQ2WZ1AYS2QFXIYXJ&client_secret=KGAZOYCSRQUQ1OE5OGQNSBNKJSVRBVI2T0ZYYUIDN3O1TJ2J",
+                                function(tip_list) {
+                                    
+                                    console.log(venuid,tip_list);
+                                    var response_list=tip_list['response'];
+                                    $.ajax({
+                                type: "POST",       // the dNodeNameefault
+                                url: "main_Controller",
+                                data: { jsonData:JSON.stringify(response_list),venue_id:venuid, fn:2},
+                                success: function(data){
+                                        //console.log(venue_id_list[i],data);
+                                        
+                                                        }
+                                        }); 
+                   
+                   
+                        });
+        }
+        </script>
+    </head>
+    <body>
+        <div>TODO write content</div>
+        <div>
+            <button onclick="addVenues()">Add venues</button>
+            <button onclick="retrieveTips()">Retrieve Tips</button>
+            <button onclick="sortLikes()">Sort Likes</button>
+            <button onclick="getUserDetails()">Get User Detail</button>
+        </div>
+    </body>
+</html>
