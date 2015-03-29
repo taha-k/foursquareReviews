@@ -87,6 +87,14 @@ public class main_Controller extends HttpServlet {
             }
             
             }break;
+            case 4:{
+            try {
+                //System.out.println("safe");
+                conn.sortPH();
+            } catch (SQLException ex) {
+                Logger.getLogger(main_Controller.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                }break;
         }
        out.println(jsonString);
     }

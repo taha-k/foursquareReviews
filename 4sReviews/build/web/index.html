@@ -89,6 +89,12 @@ and open the template in the editor.
                    
                         });
         }
+        function updatePH()
+        {
+            $.getJSON("main_Controller?fn=4",
+                                function(tip_list) {
+                                });
+        }
         </script>
     </head>
     <body>
@@ -98,6 +104,7 @@ and open the template in the editor.
             <button onclick="retrieveTips()">Retrieve Tips</button>
             <button onclick="sortLikes()">Sort Likes</button>
             <button onclick="getUserDetails()">Get User Detail</button>
+            <button onclick="updatePH()">PH</button>
         </div>
     </body>
 </html>

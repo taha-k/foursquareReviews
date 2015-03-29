@@ -38,9 +38,9 @@ public class connection {
     
     Gson gson=new Gson();
     Connection con=null;
-    private String mysqlurl="jdbc:mysql:///4sreviews";
+    private String mysqlurl="jdbc:mysql://www.pollican.com:3306/4sreviews";
     private String mysqluser="root";
-    private String mysqlpass="";
+    private String mysqlpass="Pollikan290592";
     PreparedStatement st;
     public connection()
     {
@@ -289,6 +289,50 @@ public class connection {
         
                //st.executeBatch();
                 
+    }
+
+    public void sortPH() throws SQLException {
+        PreparedStatement ps=con.prepareStatement("Select tip_id,ph from tips where neg is NULL; ");
+       
+        ResultSet rs = ps.executeQuery();
+        ArrayList likes=new ArrayList();
+        while(rs.next())
+        {
+            String [] arr=new String[2];
+            arr[0]=rs.getString("tip_id");
+            arr[1]=rs.getString("ph");
+            likes.add(arr);
+        }
+        //System.out.println(likes);
+        
+            try {
+                for (Object like : likes) {
+                String[] arr = (String[]) like;
+                JSONObject json = (JSONObject)new JSONParser().parse(arr[1]);
+                //System.out.print(json.get("groups").toString());
+                JSONObject probability=(JSONObject)new JSONParser().parse((json.get("probability").toString()));
+                String label=(String) json.get("label");
+                double neg=(double) probability.get("neg");
+                double neutral=(double) probability.get("neutral");
+                double pos=(double) probability.get("pos");
+                ps=con.prepareStatement("UPDATE `4sreviews`.`tips` SET `neg`=?, `neutral`=?, `pos`=?, `label`=? WHERE `tip_id`=?;");
+                ps.setDouble(1, neg);
+                ps.setDouble(2, neutral);
+                ps.setDouble(3, pos);
+                ps.setString(4, label);
+                ps.setString(5, arr[0]);
+                ps.execute();
+                
+                
+                System.out.print('a');
+            }
+                
+            }
+            catch (Exception e)
+            {
+                System.out.println("exception e="+e);
+            }
+        
     }
     
 }
